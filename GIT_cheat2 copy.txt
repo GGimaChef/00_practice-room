@@ -1,0 +1,166 @@
+==========================================================
+Useful Commands/Cases: 08/26/21
+==========================================================
+git remote # gives the remote (origin) name.
+git remote show origin # details about the remote.
+
+==========================================================
+First time setup
+==========================================================
+
+On Windows cmdline:
+	git init # in current folder.
+	or
+	git init <project_folder> # in <project_folder>
+
+	git config --global user.name "dilipkharel"
+	git config --global user.email "dilipkharel247@gmail.com"
+
+Add new files and commit:
+	git commit -m "First commit message"
+
+SSH Keys need to be set using GIT bash for windows:
+	sudo pacman -S openssh <enter> (for arch linux)
+	ssh-keygen -t rsa -b 4096 -C dilipkharel247@gmail.com <enter> (creates the ssh key but don't know what the options are for yet)
+	eval "$(ssh-agent -s)"
+	ssh-add ~/.ssh/id_rsa
+	clip < ~/.ssh/id_rsa.pub (copy the key to clipboard)
+	xclip -sel clip < ~/.ssh/id_rsa.pub
+	Paste this key in github account.
+
+Multiple ssh keys for different GH account:
+	ssh-keygen -t rsa -b 4096 -C dk563@cornell.edu <enter> (same thing but with new email associated to the new key)
+	<use different name for the file, cornell_git>
+	eval "$(ssh-agent -s)" # activate the ssh-agent to ssh-add.
+	ssh-add ~/.ssh/cornell_git
+	<setup ssh with GH account>
+
+	<we need to create a file called config to define how to use multiple key files>
+	vim ~/.ssh/config
+		# Personal GH acct.
+		Host github.com
+			Hostname github.com
+			User git
+			AddKeysToAgent yes
+			# UseKeychain yes
+			IdentityFile ~/.ssh/id_rsa
+
+		# Cornell GH acct.
+		Host github.coecis.cornell.edu
+			Hostname github.coecis.cornell.edu
+			User git
+			AddKeysToAgent yes
+			# UseKeychain yes
+			IdentityFile ~/.ssh/cornell_git
+
+	<save this file and we're ready to go>
+
+After this PyCharm git worked.
+
+
+==========================================================
+GIT-Hub Settings:
+==========================================================
+
+On GIT-Hub:
+	Create new repo. Do NOT initialize it with README, license or gitignore files.
+	Copy the remote repository url.
+
+On Windows cmdline:
+	git init new_repo_folder
+	git remote add new_repo_name <url>
+	git remote -v
+	echo "# readme message" >> README.md # create a file.
+	git add README.md # add the file to commit and push.
+	git commit -m "first commit"
+	git push -u new_repo_name master # -u if user.name is not the global one.
+
+To Clone a repo from GIT-Hub: (gets initialized automatically)
+	git clone <ssh-link from github>
+	[add new file or make some changes]
+	git add .
+	git commit -m "Second commit message"
+	git remote -v (to check the name of the remote repo)
+	git push origin master
+
+To Pull specific files from GIT-Hub:
+	git pull <ssh-link from GH for the branch> <branch_name>
+
+
+==========================================================
+gitignore pattern format:
+==========================================================
+The purpose of gitignore files is to ensure that certain files not tracked by Git remain untracked.
+
+	git rm --cached
+		To stop tracking a file that is currently tracked.
+
+	blank line can be used as a separator for readability.
+	# is a comment.
+	\ to include any special characters. Eg: \#include to list a file named #include
+	! negates the pattern.
+	/ directory separator. Eg: folder/ to ignore the directory named folder.
+	* matches anything except a slash "/".
+	? matches one character except "/".
+
+
+==========================================================
+Branch Functionality:
+==========================================================
+
+Create a new branch
+	git branch new_branch_name
+
+To Switch to another branch
+	git switch another_branch (didn't work on windows)
+	git checkout another_branch (worked on windows)
+
+To merge a branch
+	git merge <branch> # merges <branch> to current branch.
+
+To delete a branch
+    (switch to master to delete other branches)
+	git push -d <remote_name> <branch_name> # pushing the branch before deleting.
+	git branch -d <branch_name>
+
+	git branch [-d|-D] <branch_name> 
+		# [-d]elete local branch (only if fully merged in its upstream branch).
+		# -D is --delete --force. deletes irrespective of merge status.
+
+	git push <remote_name> --delete <branch_name>
+		or (both will delete remote branch)
+	git push <remote_name> :<branch_name>
+
+
+To fetch changes from all remotes and locally delete remote deleted branches/tags etc
+	git fetch --all --prune
+
+
+==========================================================
+# 11/25/2020:
+Working with others in git.
+==========================================================
+
+User has given you access to their private repo.
+	Github > Your Repo > Settings > Manage Access > Find a collaborator
+
+To clone their repo
+	git clone <git@github.com:username/repo.git> <branch_name>
+		# the remote is named "origin" by default.
+	git pull origin <branch_name>
+		# then add, commit and push the changes as usual.
+
+Adding a branch collaborator (needs to have an initialized repo)
+	git init <project_folder_name>
+	git remote add <remote_name> <git@github.com:username/repo.git>
+		# adds collab's fork as a remote.
+		# Now, you can fetch, pull, push etc to his fork (permission needed).
+	git fetch <remote_name>
+
+Checkout the remote branch as a local branch.git 
+	git checkout -b <local_branch_name> <remote_name>/<remote_branch_name>
+		# Now, you can add, commit and so on.
+	git push <remote_name> <remote_branch_name>
+
+
+
