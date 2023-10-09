@@ -1,4 +1,23 @@
 ==========================================================
+Oct-8-23
+==========================================================
+git asking password for push to Sam's repo
+
+- $ git pull origin master 			# did not work.
+		- message in terminal
+		
+You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+
+- $ git config pull.rebase false 			# this worked and I was able to push to master branch.
+
+
+==========================================================
 Useful Commands/Cases: 08/26/21
 ==========================================================
 git remote # gives the remote (origin) name.
